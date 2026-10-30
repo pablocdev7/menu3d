@@ -1,0 +1,13 @@
+#!/bin/sh
+# Rechaza el commit si el mensaje trae firma o co-autoría de Claude/Anthropic.
+# Git le pasa como $1 la ruta del archivo con el mensaje del commit.
+
+archivo_mensaje="$1"
+
+# Ignoramos las líneas de comentario (las que empiezan con #) que agrega git.
+if grep -v '^#' "$archivo_mensaje" | grep -Eiq 'co-authored-by:?.*(claude|anthropic)|generated with.*claude'; then
+  echo "commit-msg: el mensaje menciona co-autoría o firma de Claude/Anthropic. Sacala y volvé a intentar." >&2
+  exit 1
+fi
+
+exit 0

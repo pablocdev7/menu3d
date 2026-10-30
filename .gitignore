@@ -1,0 +1,27 @@
+# Dependencias
+node_modules/
+
+# Builds y artefactos
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.wrangler/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
