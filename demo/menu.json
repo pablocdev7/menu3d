@@ -1,0 +1,44 @@
+{
+  "local": "Bodegón Demo",
+  "platos": [
+    {
+      "id": "milanesa-napolitana",
+      "nombre": "Milanesa napolitana",
+      "descripcion": "Milanesa de ternera con salsa de tomate, jamón y muzzarella gratinada.",
+      "seccion": "Principales",
+      "tipo": "plato",
+      "formatos": [
+        {
+          "nombre": "Individual",
+          "precio": { "centavos": 1450000, "moneda": "ARS" }
+        }
+      ],
+      "ingredientesVisibles": [
+        "ternera",
+        "pan rallado",
+        "salsa de tomate",
+        "jamón",
+        "muzzarella"
+      ],
+      "alergenos": ["gluten", "huevo", "lacteos"],
+      "alergenosValidadosPorDueno": false
+    },
+    {
+      "id": "fernet-con-coca",
+      "nombre": "Fernet con coca",
+      "descripcion": "El clásico, con mucho hielo.",
+      "seccion": "Tragos",
+      "tipo": "bebida",
+      "formatos": [
+        { "nombre": "Vaso", "precio": { "centavos": 600000, "moneda": "ARS" } },
+        {
+          "nombre": "Jarra 1 L",
+          "precio": { "centavos": 1600000, "moneda": "ARS" }
+        }
+      ],
+      "ingredientesVisibles": ["fernet", "cola", "hielo"],
+      "alergenos": [],
+      "alergenosValidadosPorDueno": false
+    }
+  ]
+}

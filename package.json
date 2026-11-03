@@ -11,13 +11,15 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "validar:demo": "tsx packages/shared/scripts/validar-demo.ts demo/menu.json"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1"
   }

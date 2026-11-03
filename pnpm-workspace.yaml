@@ -1,3 +1,14 @@
 packages:
   - "apps/*"
   - "packages/*"
+# Solo esbuild puede correr scripts de build al instalarse
+allowBuilds:
+  esbuild: true
+# Solo instala versiones publicadas hace al menos 3 días (4320 minutos)
+minimumReleaseAge: 4320
+# Rechaza versiones que tengan menos evidencia de confianza que las anteriores
+trustPolicy: no-downgrade
+# Falla la instalación si una dependencia con build no está aprobada
+strictDepBuilds: true
+# Bloquea subdependencias que vengan de git, tarballs u otros orígenes exóticos
+blockExoticSubdeps: true
