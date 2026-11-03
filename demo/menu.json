@@ -33,7 +33,8 @@
         { "nombre": "Vaso", "precio": { "centavos": 600000, "moneda": "ARS" } },
         {
           "nombre": "Jarra 1 L",
-          "precio": { "centavos": 1600000, "moneda": "ARS" }
+          "precio": { "centavos": 1600000, "moneda": "ARS" } 
+          
         }
       ],
       "ingredientesVisibles": ["fernet", "cola", "hielo"],
