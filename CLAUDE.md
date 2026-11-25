@@ -10,6 +10,9 @@ Carta digital por QR con video por plato y métricas para restaurantes.
 - Cada función nueva llega con pruebas positivas y negativas.
 - Nada de claves ni secretos en el repo.
 - Cuando haya una alternativa más simple, mostrala primero.
+- Verificación por defecto: pnpm typecheck y pnpm test. Respondé "OK" o solo los errores.
+- Nada de capturas, mediciones ni Playwright salvo que se pida.
+- Respuestas cortas: qué cambió y qué archivos tocaste, sin repetir código.
 
 ## Stack
 pnpm monorepo · TypeScript · Zod · Vitest · Cloudflare Workers + Hono · D1 + Drizzle · R2 · Tinybird · React + Vite.
