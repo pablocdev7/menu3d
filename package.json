@@ -12,7 +12,7 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "validar:demo": "tsx packages/shared/scripts/validar-demo.ts demo/menu.json"
+    "validar:demo": "tsx packages/shared/scripts/validar-demo.ts demo/carta.json"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

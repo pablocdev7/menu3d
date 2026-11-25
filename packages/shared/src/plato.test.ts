@@ -1,17 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { MenuSchema, PlatoSchema, type Plato } from "./plato.js";
-
-const platoMinimo: Plato = {
-  id: "empanada",
-  nombre: "Empanada",
-  descripcion: "",
-  seccion: "Entradas",
-  tipo: "plato",
-  formatos: [{ nombre: "Unidad", precio: { centavos: 150000, moneda: "ARS" } }],
-  ingredientesVisibles: [],
-  alergenos: [],
-  alergenosValidadosPorDueno: false,
-};
+import { PlatoSchema } from "./plato.js";
+import { platoMinimo } from "./plato.fixture.js";
 
 // Arma un plato cambiando solo lo que interesa en cada caso.
 const conCambios = (cambios: Record<string, unknown>) => ({
@@ -33,7 +22,7 @@ describe("PlatoSchema", () => {
     const bebida = conCambios({
       id: "vermu-de-la-casa",
       nombre: "Vermú de la casa",
-      seccion: "Tragos",
+      categoriaId: "tragos",
       tipo: "bebida",
       formatos: [
         { nombre: "Vaso", precio: { centavos: 400000, moneda: "ARS" } },
@@ -44,32 +33,39 @@ describe("PlatoSchema", () => {
     expect(PlatoSchema.safeParse(bebida).success).toBe(true);
   });
 
+  it("acepta etiquetas, destacado, no disponible y media con poster", () => {
+    const plato = conCambios({
+      etiquetas: ["vegano", "sin_tacc"],
+      destacado: true,
+      disponible: false,
+      media: { tipo: "video", url: "videos/empanada.mp4", poster: "p.jpg" },
+    });
+    expect(PlatoSchema.safeParse(plato).success).toBe(true);
+  });
+
+  it("acepta media de foto sin poster", () => {
+    const plato = conCambios({ media: { tipo: "foto", url: "fotos/e.jpg" } });
+    expect(PlatoSchema.safeParse(plato).success).toBe(true);
+  });
+
   it.each([
     ["precio negativo", conPrecio(-1)],
     ["precio con decimales", conPrecio(1500.5)],
     ["formatos vacío", conCambios({ formatos: [] })],
     ["alérgeno inexistente", conCambios({ alergenos: ["palta"] })],
     ["alérgeno repetido", conCambios({ alergenos: ["gluten", "gluten"] })],
+    ["etiqueta inexistente", conCambios({ etiquetas: ["keto"] })],
+    ["etiqueta repetida", conCambios({ etiquetas: ["vegano", "vegano"] })],
+    ["categoriaId que no es slug", conCambios({ categoriaId: "Entradas" })],
+    ["sin disponible", conCambios({ disponible: undefined })],
+    ["destacado no booleano", conCambios({ destacado: "si" })],
+    ["media con url vacía", conCambios({ media: { tipo: "foto", url: "" } })],
+    ["media de tipo inválido", conCambios({ media: { tipo: "3d", url: "x" } })],
+    [
+      "el campo viejo seccion",
+      conCambios({ categoriaId: undefined, seccion: "Entradas" }),
+    ],
   ])("rechaza %s", (_caso, plato) => {
     expect(PlatoSchema.safeParse(plato).success).toBe(false);
-  });
-});
-
-describe("MenuSchema", () => {
-  it("acepta un menú con ids únicos", () => {
-    const menu = {
-      local: "El Bodegón",
-      platos: [platoMinimo, conCambios({ id: "provoleta" })],
-    };
-    expect(MenuSchema.safeParse(menu).success).toBe(true);
-  });
-
-  it("rechaza ids duplicados en el menú", () => {
-    const resultado = MenuSchema.safeParse({
-      local: "El Bodegón",
-      platos: [platoMinimo, platoMinimo],
-    });
-    expect(resultado.success).toBe(false);
-    expect(resultado.error?.issues[0]?.path).toEqual(["platos", 1, "id"]);
   });
 });

@@ -1,6 +1,6 @@
 # Demo
 
-`menu.json` es el menú de ejemplo. Se valida con `pnpm validar:demo`.
+`carta.json` es la carta de ejemplo (formato v2, ver `docs/manual/01-contrato-de-datos.md`). Se valida con `pnpm validar:demo`.
 
 Cada plato tiene su carpeta `demo/NN-slug/` (NN = orden, slug = `id` del plato):
 

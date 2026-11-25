@@ -1,10 +1,10 @@
-// Valida un menú JSON contra MenuSchema y muestra los errores legibles.
-// Uso: tsx packages/shared/scripts/validar-demo.ts [ruta]  (por defecto demo/menu.json)
+// Valida una carta JSON contra CartaSchema y muestra los errores legibles.
+// Uso: tsx packages/shared/scripts/validar-demo.ts [ruta]  (por defecto demo/carta.json)
 import { readFileSync } from "node:fs";
 import { z } from "zod";
-import { MenuSchema } from "../src/index.js";
+import { CartaSchema } from "../src/index.js";
 
-const ruta = process.argv[2] ?? "demo/menu.json";
+const ruta = process.argv[2] ?? "demo/carta.json";
 
 let datos: unknown;
 try {
@@ -14,7 +14,7 @@ try {
   process.exit(1);
 }
 
-const resultado = MenuSchema.safeParse(datos);
+const resultado = CartaSchema.safeParse(datos);
 
 if (!resultado.success) {
   console.error(`✗ ${ruta} no es válido:\n`);
@@ -22,6 +22,7 @@ if (!resultado.success) {
   process.exit(1);
 }
 
+const { local, categorias, platos } = resultado.data;
 console.log(
-  `✓ ${ruta} es válido: "${resultado.data.local}" con ${resultado.data.platos.length} platos.`,
+  `✓ ${ruta} es válido: "${local.nombre}" con ${categorias.length} categorías y ${platos.length} platos.`,
 );
