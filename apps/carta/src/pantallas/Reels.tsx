@@ -11,11 +11,8 @@ import {
 
 export const idDePlato = (id: string) => `plato-${id}`;
 
-// Cuánto hay que desplazarse para que la cápsula de categorías se achique.
-const UMBRAL_COMPACTAR_PX = 8;
-
-// Pantalla principal: el video a pantalla completa, la cápsula de categorías arriba
-// y dos cápsulas de acciones abajo, todo flotando en vidrio.
+// Pantalla principal: arriba una barra global (local y "Carta") con las pestañas de
+// categorías; debajo, un plato por pantalla con su tarjeta de video y el texto.
 export function Reels(props: {
   nombreLocal: string;
   logoLocal: string | undefined;
@@ -30,14 +27,11 @@ export function Reels(props: {
   const { grupo, platoDestino, alLlegar } = props;
   const activa = grupo.categoria.id;
   const refReel = useRef<HTMLElement>(null);
-  const ultimoScroll = useRef(0);
-  const [compacta, setCompacta] = useState(false);
   const [actual, setActual] = useState<Plato | undefined>(grupo.platos[0]);
 
-  // Al venir desde "Ver toda la carta", saltamos directo al plato elegido.
+  // Al elegir un plato en la HojaCarta, saltamos directo a él.
   // (El reel arranca arriba solo: tiene key={activa} y se remonta al cambiar.)
   useLayoutEffect(() => {
-    ultimoScroll.current = 0;
     if (!platoDestino) return;
     document
       .getElementById(idDePlato(platoDestino))
@@ -45,7 +39,7 @@ export function Reels(props: {
     alLlegar();
   }, [activa, platoDestino, alLlegar]);
 
-  // Qué plato está en pantalla: lo usan las cápsulas de abajo y el fondo de escritorio.
+  // Qué plato está en pantalla: lo usa el fondo de escritorio.
   useEffect(() => {
     const reel = refReel.current;
     if (!reel) return;
@@ -66,13 +60,6 @@ export function Reels(props: {
     return () => observador.disconnect();
   }, [grupo]);
 
-  const alDesplazar = () => {
-    const y = refReel.current?.scrollTop ?? 0;
-    if (Math.abs(y - ultimoScroll.current) < UMBRAL_COMPACTAR_PX) return;
-    ultimoScroll.current = y;
-    setCompacta(true);
-  };
-
   const platoActual =
     actual && actual.categoriaId === activa ? actual : grupo.platos[0];
 
@@ -81,23 +68,37 @@ export function Reels(props: {
       <FondoEscritorio plato={platoActual} />
 
       <div className="reels">
-        <CapsulaCategorias
-          grupos={props.grupos}
-          activa={activa}
-          compacta={compacta}
-          alElegir={(id) => {
-            setCompacta(false);
-            props.alElegirCategoria(id);
-          }}
-          alExpandir={() => setCompacta(false)}
-        />
+        <header className="cabecera vidrio">
+          <div className="barra">
+            <p className="barra-local">
+              {/* alt vacío: el nombre del local está al lado y no queremos leerlo dos veces. */}
+              {props.logoLocal && (
+                <img className="barra-logo" src={props.logoLocal} alt="" />
+              )}
+              <span>{props.nombreLocal}</span>
+            </p>
+            <button
+              type="button"
+              className="barra-carta"
+              onClick={props.alVerCarta}
+            >
+              <IconoLista />
+              Carta
+            </button>
+          </div>
+
+          <PestanasCategorias
+            grupos={props.grupos}
+            activa={activa}
+            alElegir={props.alElegirCategoria}
+          />
+        </header>
 
         <main
           key={activa}
           ref={refReel}
           className="reel"
           aria-label={grupo.categoria.nombre}
-          onScroll={alDesplazar}
         >
           {grupo.platos.map((plato) => (
             <article
@@ -108,133 +109,106 @@ export function Reels(props: {
               data-agotado={estaAgotado(plato) || undefined}
               aria-label={plato.nombre}
             >
-              <MediaPlato plato={plato} />
-              <TextoPlato
-                plato={plato}
-                nombreLocal={props.nombreLocal}
-                logoLocal={props.logoLocal}
-              />
+              <div className="tarjeta">
+                <MediaPlato plato={plato} />
+              </div>
+              <TextoPlato plato={plato} alVerInfo={props.alVerInfo} />
             </article>
           ))}
         </main>
-
-        <div className="capsulas-abajo">
-          <button
-            type="button"
-            className="capsula-boton vidrio"
-            onClick={() => platoActual && props.alVerInfo(platoActual)}
-          >
-            Ingredientes y alérgenos
-          </button>
-          <button
-            type="button"
-            className="capsula-boton vidrio"
-            onClick={props.alVerCarta}
-          >
-            Ver toda la carta
-          </button>
-        </div>
       </div>
     </div>
   );
 }
 
-// Cápsula de vidrio con las categorías. La pastilla clara se desliza hasta la activa;
-// en modo compacto solo queda la activa, y tocarla vuelve a abrir la cápsula.
-function CapsulaCategorias(props: {
+// Pestañas de solo texto. Un indicador de 2px se desliza bajo la activa y la pista
+// se desplaza para dejarla centrada.
+function PestanasCategorias(props: {
   grupos: Grupo[];
   activa: string;
-  compacta: boolean;
   alElegir: (categoriaId: string) => void;
-  alExpandir: () => void;
 }) {
   const refPista = useRef<HTMLDivElement>(null);
-  const refPastilla = useRef<HTMLSpanElement>(null);
-  const { activa, compacta } = props;
-  const nombreActiva =
-    props.grupos.find((g) => g.categoria.id === activa)?.categoria.nombre ?? "";
+  const refIndicador = useRef<HTMLSpanElement>(null);
+  const { activa } = props;
 
-  // Movemos la pastilla con estilos directos: así la transición corre en CSS.
+  // El indicador mide 1px y lo llevamos con transform (posición y escala) hasta el
+  // texto de la activa: así la animación corre en CSS y no recalcula el layout.
   useLayoutEffect(() => {
     const ubicar = () => {
-      const pista = refPista.current;
-      const pastilla = refPastilla.current;
-      const boton = pista?.querySelector<HTMLElement>('[aria-current="true"]');
-      if (!pista || !pastilla || !boton) return;
-      pastilla.style.width = `${boton.offsetWidth}px`;
-      pastilla.style.transform = `translateX(${boton.offsetLeft}px)`;
-      boton.scrollIntoView({ block: "nearest", inline: "nearest" });
+      const indicador = refIndicador.current;
+      const texto = refPista.current?.querySelector<HTMLElement>(
+        '[aria-current="true"] > span',
+      );
+      if (!indicador || !texto) return;
+      indicador.style.transform = `translateX(${texto.offsetLeft}px) scaleX(${texto.offsetWidth})`;
     };
     ubicar();
     window.addEventListener("resize", ubicar);
     return () => window.removeEventListener("resize", ubicar);
-  }, [activa, compacta]);
+  }, [activa]);
+
+  // Centramos la activa. Sin "behavior": lo decide scroll-behavior en el CSS, que
+  // con movimiento reducido salta sin animar.
+  useEffect(() => {
+    refPista.current
+      ?.querySelector('[aria-current="true"]')
+      ?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [activa]);
 
   return (
-    <div className="capsulas-arriba">
-      <nav
-        className={compacta ? "capsula vidrio oculta" : "capsula vidrio"}
-        aria-label="Categorías"
-        inert={compacta}
-      >
-        <div className="capsula-pista" ref={refPista}>
-          <span className="pastilla" ref={refPastilla} aria-hidden="true" />
-          {props.grupos.map(({ categoria }) => (
-            <button
-              key={categoria.id}
-              type="button"
-              className="categoria"
-              aria-current={categoria.id === activa ? "true" : undefined}
-              onClick={() => props.alElegir(categoria.id)}
-            >
-              {categoria.nombre}
-            </button>
-          ))}
-        </div>
-      </nav>
-
-      <button
-        type="button"
-        className={
-          compacta
-            ? "capsula-compacta vidrio"
-            : "capsula-compacta vidrio oculta"
-        }
-        aria-label={`${nombreActiva}. Ver todas las categorías`}
-        inert={!compacta}
-        onClick={props.alExpandir}
-      >
-        <span className="pastilla-compacta">{nombreActiva}</span>
-      </button>
-    </div>
+    <nav className="pestanas" aria-label="Categorías">
+      <div className="pestanas-pista" ref={refPista}>
+        {props.grupos.map(({ categoria }) => (
+          <button
+            key={categoria.id}
+            type="button"
+            className="pestana"
+            aria-current={categoria.id === activa ? "true" : undefined}
+            onClick={() => props.alElegir(categoria.id)}
+          >
+            <span>{categoria.nombre}</span>
+          </button>
+        ))}
+        <span className="indicador" ref={refIndicador} aria-hidden="true" />
+      </div>
+    </nav>
   );
 }
 
-// Identidad del local, nombre, precio y descripción directo sobre el video,
-// con un velo oscuro detrás.
+// Ícono de lista (tres renglones con viñeta), del mismo color que el texto.
+function IconoLista() {
+  return (
+    <svg
+      className="icono"
+      viewBox="0 0 20 20"
+      width="20"
+      height="20"
+      aria-hidden="true"
+    >
+      <g fill="currentColor">
+        <circle cx="3.5" cy="5" r="1.5" />
+        <circle cx="3.5" cy="10" r="1.5" />
+        <circle cx="3.5" cy="15" r="1.5" />
+        <rect x="7" y="4.1" width="11" height="1.8" rx="0.9" />
+        <rect x="7" y="9.1" width="11" height="1.8" rx="0.9" />
+        <rect x="7" y="14.1" width="11" height="1.8" rx="0.9" />
+      </g>
+    </svg>
+  );
+}
+
+// Nombre, precio, etiquetas, descripción y el botón de info, sobre negro.
 function TextoPlato(props: {
   plato: Plato;
-  nombreLocal: string;
-  logoLocal: string | undefined;
+  alVerInfo: (plato: Plato) => void;
 }) {
   const { plato } = props;
   const etiquetas = lineaEtiquetas(plato.etiquetas);
   return (
     <div className="reel-texto">
-      <p className="reel-local">
-        {/* alt vacío: el nombre del local está al lado y no queremos leerlo dos veces. */}
-        {props.logoLocal && (
-          <img className="reel-local-logo" src={props.logoLocal} alt="" />
-        )}
-        <span>{props.nombreLocal}</span>
-      </p>
-      <div className="reel-cabecera">
-        <h2 className="reel-nombre">{plato.nombre}</h2>
-        <span className="reel-precio precio">{textoPrecio(plato)}</span>
-      </div>
-      {plato.descripcion && (
-        <p className="reel-descripcion">{plato.descripcion}</p>
-      )}
+      <h2 className="reel-nombre">{plato.nombre}</h2>
+      <p className="reel-precio precio">{textoPrecio(plato)}</p>
       {(plato.destacado || etiquetas) && (
         <p className="reel-etiquetas">
           {plato.destacado && <span className="de-la-casa">De la casa</span>}
@@ -242,6 +216,16 @@ function TextoPlato(props: {
           {etiquetas}
         </p>
       )}
+      {plato.descripcion && (
+        <p className="reel-descripcion">{plato.descripcion}</p>
+      )}
+      <button
+        type="button"
+        className="reel-info"
+        onClick={() => props.alVerInfo(plato)}
+      >
+        Ingredientes y alérgenos
+      </button>
     </div>
   );
 }

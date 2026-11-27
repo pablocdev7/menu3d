@@ -25,3 +25,7 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Videos: originales sin procesar y salida de preparar:videos
+media-origen/
+apps/carta/public/videos/

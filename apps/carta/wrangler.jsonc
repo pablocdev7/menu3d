@@ -1,0 +1,11 @@
+// Deploy de la carta pública como sitio estático en Cloudflare Workers.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "menu3d-carta",
+  "compatibility_date": "2026-11-25",
+  "assets": {
+    "directory": "./dist",
+    // Cualquier ruta desconocida devuelve index.html y la resuelve la app.
+    "not_found_handling": "single-page-application"
+  }
+}

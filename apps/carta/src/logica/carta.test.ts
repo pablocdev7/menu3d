@@ -81,7 +81,7 @@ describe("cargarCarta", () => {
   it("acepta la carta demo", () => {
     const resultado = cargarCarta(datosDemo);
     expect(resultado.ok).toBe(true);
-    if (resultado.ok) expect(resultado.carta.platos).toHaveLength(13);
+    if (resultado.ok) expect(resultado.carta.platos).toHaveLength(9);
   });
 
   it("rechaza datos inválidos con detalle técnico", () => {

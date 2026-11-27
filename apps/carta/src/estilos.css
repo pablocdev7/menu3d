@@ -1,5 +1,5 @@
 /* Carta pública, estilo Liquid Glass (iOS 27). Mobile-first desde 360px.
-   El video es protagonista; los controles flotan encima en vidrio (.vidrio). */
+   Sobre negro puro: cabecera de vidrio arriba, tarjeta de video y texto debajo. */
 
 *,
 *::before,
@@ -22,24 +22,19 @@
   --t-boton: 600 15px/18px var(--fuente);
   --t-nota: 400 13px/18px var(--fuente);
 
-  /* Sobre el video. */
+  /* Reels: siempre sobre negro puro. El secundario da ≈ 6:1 sobre #000. */
   --video-fondo: #000000;
   --video-texto: #ffffff;
-  --video-secundario: rgba(255, 255, 255, 0.75);
-  /* Velo detrás del texto del plato: con .65 de negro, el blanco cumple AA
-     aunque el plato sea blanco (≈ 7:1). */
-  --velo: rgba(0, 0, 0, 0.65);
-  --velo-fondo: rgba(0, 0, 0, 0.75);
+  --video-secundario: rgba(235, 235, 245, 0.6);
 
-  /* Vidrio: valores por defecto (sobre video). Las hojas los redefinen. */
+  /* Vidrio: valores por defecto. La cabecera y las hojas los redefinen. */
   --vidrio-fondo: rgba(255, 255, 255, 0.14);
   --vidrio-borde: rgba(255, 255, 255, 0.28);
   --vidrio-filtro: blur(24px) saturate(180%);
   --vidrio-opaco: #1c1c1e;
-  /* Vidrio oscuro de las cápsulas sobre video. */
-  --vidrio-video-fondo: rgba(0, 0, 0, 0.32);
-  --vidrio-video-borde: rgba(255, 255, 255, 0.22);
-  --pastilla: rgba(255, 255, 255, 0.3);
+  /* Vidrio oscuro de la cabecera: sobre negro no se nota; cuando pasa un video
+     por debajo, lo oscurece lo suficiente para leer el texto blanco. */
+  --vidrio-cabecera: rgba(0, 0, 0, 0.62);
 
   /* Hojas, modo claro (tinte denso para que las listas se lean sobre cualquier video). */
   --hoja-tinte: rgba(242, 242, 247, 0.82);
@@ -63,12 +58,19 @@
   --radio-grupo: 12px;
   --radio-miniatura: 12px;
   --tactil: 44px;
-  --separacion: 12px;
-  --alto-capsulas-abajo: 52px;
+  --alto-barra: 44px;
+  --alto-pestanas: 44px;
+  --alto-cabecera: calc(
+    env(safe-area-inset-top) + var(--alto-barra) + var(--alto-pestanas)
+  );
+  --margen-tarjeta: 8px;
+  --radio-tarjeta: 24px;
+  --fundido-pestanas: 20px;
 
   /* Movimiento. */
   --resorte: cubic-bezier(0.32, 0.72, 0, 1);
   --duracion: 400ms; /* igual a DURACION_MS en logica/hoja.ts */
+  --duracion-indicador: 300ms;
 
   font: var(--t-cuerpo);
   -webkit-text-size-adjust: 100%;
@@ -146,14 +148,6 @@ button {
   box-shadow: inset 0 0 0 1px var(--vidrio-borde);
 }
 
-/* Cápsulas sobre el video: vidrio oscuro, para que el texto blanco se lea
-   aunque el plato sea claro. Las hojas usan su propio tinte. */
-.capsulas-arriba,
-.capsulas-abajo {
-  --vidrio-fondo: var(--vidrio-video-fondo);
-  --vidrio-borde: var(--vidrio-video-borde);
-}
-
 /* Sin soporte de backdrop-filter, o si la persona pide más contraste o menos
    transparencia: vidrio opaco. */
 @supports not (
@@ -171,9 +165,7 @@ button {
     backdrop-filter: none;
   }
 
-  :root,
-  .capsulas-arriba,
-  .capsulas-abajo {
+  :root {
     --fila: var(--fila-opaca);
     --vidrio-borde: rgba(255, 255, 255, 0.5);
   }
@@ -193,6 +185,7 @@ button {
   width: min(100%, var(--columna));
   margin-inline: auto;
   overflow: hidden;
+  container-type: inline-size; /* la tarjeta calcula su alto con 100cqi */
 }
 
 /* Fondo de escritorio: el plato actual, muy desenfocado y oscurecido. */
@@ -210,6 +203,137 @@ button {
   transform: scale(1.2); /* el blur deja bordes claros; los sacamos de cuadro */
 }
 
+/* ---------- Cabecera global: local, botón "Carta" y pestañas ---------- */
+/* Vidrio oscuro sin borde: sobre el negro no se ve; cuando sube un video por
+   debajo durante el scroll, lo oscurece. */
+.cabecera {
+  --vidrio-fondo: var(--vidrio-cabecera);
+  --vidrio-opaco: var(--video-fondo);
+
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: env(safe-area-inset-top);
+  box-shadow: none;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--alto-barra);
+  /* 16px al texto del local; el botón lleva su propio relleno de 8px. */
+  padding: 0 8px 0 16px;
+}
+
+.barra-local {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font: 600 15px/20px var(--fuente);
+}
+
+.barra-local span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.barra-logo {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.barra-carta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tactil);
+  padding: 0 8px;
+  border-radius: 12px;
+  font: var(--t-boton);
+}
+
+.icono {
+  flex: none;
+}
+
+/* Pestañas de solo texto. La pista se desplaza en horizontal y se funde en los
+   bordes con una máscara, en lugar de cortar el texto. */
+.pestanas {
+  height: var(--alto-pestanas);
+}
+
+.pestanas-pista {
+  position: relative; /* referencia de offsetLeft para el indicador */
+  display: flex;
+  height: 100%;
+  /* 4px + 12px de la pestaña = el texto arranca a 16px, alineado con el local
+     y justo donde termina el fundido. */
+  padding-inline: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  --mascara: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fundido-pestanas),
+    #000 calc(100% - var(--fundido-pestanas)),
+    transparent
+  );
+  -webkit-mask-image: var(--mascara);
+  mask-image: var(--mascara);
+}
+
+.pestanas-pista::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sin position: así el offsetLeft del texto se mide contra la pista. */
+.pestana {
+  flex: none;
+  display: flex;
+  align-items: center;
+  min-height: var(--tactil);
+  min-width: var(--tactil);
+  padding: 0 12px;
+  font: 600 15px/20px var(--fuente);
+  color: var(--video-secundario);
+  white-space: nowrap;
+  transition: color var(--duracion-indicador) var(--resorte);
+}
+
+.pestana[aria-current="true"] {
+  color: var(--video-texto);
+}
+
+/* Hacia adentro: la pista recorta lo que sobresale. */
+.pestana:focus-visible {
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+/* Mide 1px: Reels.tsx lo ubica y lo estira con translateX + scaleX. */
+.indicador {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 2px;
+  background: var(--video-texto);
+  transform-origin: left center;
+  transition: transform var(--duracion-indicador) var(--resorte);
+  pointer-events: none;
+}
+
 /* ---------- Reel ---------- */
 .reel {
   height: 100%;
@@ -223,13 +347,29 @@ button {
   display: none;
 }
 
-/* Ocupa toda la pantalla, también detrás de la barra de estado (viewport-fit=cover). */
+/* Un plato por pantalla: la tarjeta toma el alto que deja libre el texto. */
 .reel-item {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100dvh;
+  padding-top: var(--alto-cabecera);
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  background: var(--video-fondo);
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden;
+}
+
+/* Alto ideal = ancho × 1,5 (2:3). Si no entra, la tarjeta se achica (flex-shrink)
+   y el texto (flex: none) queda entero. 100cqi = ancho de .reels. */
+.tarjeta {
+  position: relative;
+  flex: 0 1 calc((100cqi - 2 * var(--margen-tarjeta)) * 1.5);
+  min-height: 0;
+  margin: 0 var(--margen-tarjeta);
+  border-radius: var(--radio-tarjeta);
+  overflow: hidden;
+  background: var(--vidrio-opaco); /* mientras carga el poster */
 }
 
 .media {
@@ -244,86 +384,39 @@ button {
   filter: grayscale(1);
 }
 
+/* Presupuesto de alto ≈ 176px: 8 + nombre 64 + precio 24 + etiquetas 16 +
+   descripción 40 + botón 24. Por eso los clamps y el renglón único de etiquetas. */
 .reel-texto {
-  position: absolute;
-  z-index: 1; /* contexto propio: el velo (z-index -1) queda sobre el video y bajo el texto */
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  gap: 4px;
-  padding: 0 16px
-    calc(
-      var(--alto-capsulas-abajo) + var(--separacion) * 2 +
-        env(safe-area-inset-bottom)
-    );
-}
-
-/* Velo suave: nace 64px arriba del texto y se hace denso detrás de él. Así cubre
-   el tercio inferior sin tapar el plato. */
-.reel-texto::before {
-  content: "";
-  position: absolute;
-  inset: -64px 0 0;
-  z-index: -1;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--velo) 64px,
-    var(--velo-fondo)
-  );
-  pointer-events: none;
-}
-
-/* Identidad del local: logo circular de 24px (si hay) y nombre en 13 semibold. */
-.reel-local {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font: var(--t-nota);
-  font-weight: 600;
-  color: var(--video-secundario);
-}
-
-.reel-local-logo {
   flex: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.reel-cabecera {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 16px 0;
 }
 
 .reel-nombre {
-  flex: 1;
-  min-width: 0;
-  font: var(--t-titulo-1);
+  font: 700 28px/32px var(--fuente);
   overflow-wrap: anywhere;
-}
-
-.reel-precio {
-  font: var(--t-titular);
-  font-variant-numeric: tabular-nums;
-}
-
-.reel-descripcion {
-  font: var(--t-subtitulo);
-  color: var(--video-secundario);
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
 
+.reel-precio {
+  margin-top: 2px;
+  font: var(--t-titular);
+  color: var(--tint-oscuro);
+}
+
 .reel-etiquetas {
-  font: var(--t-nota);
+  max-width: 100%;
+  font: 400 13px/16px var(--fuente);
   color: var(--video-secundario);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .de-la-casa {
@@ -331,132 +424,37 @@ button {
   font-weight: 600;
 }
 
-/* ---------- Cápsula de categorías (arriba) ---------- */
-.capsulas-arriba {
-  position: absolute;
-  z-index: 2;
-  top: calc(env(safe-area-inset-top) + 8px);
-  left: max(var(--separacion), env(safe-area-inset-left));
-  right: max(var(--separacion), env(safe-area-inset-right));
-  display: flex;
-  justify-content: center;
-  pointer-events: none; /* solo las cápsulas reciben toques */
-}
-
-.capsula,
-.capsula-compacta {
-  pointer-events: auto;
-  border-radius: 999px;
-  transition:
-    opacity var(--duracion) var(--resorte),
-    transform var(--duracion) var(--resorte);
-}
-
-.capsula {
-  max-width: 100%;
-  overflow: hidden;
-  padding: 4px;
-}
-
-.capsula-pista {
-  position: relative;
-  display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
-  border-radius: 999px;
-}
-
-.capsula-pista::-webkit-scrollbar {
-  display: none;
-}
-
-/* La pastilla clara de la categoría activa: se desliza con el resorte. */
-.pastilla {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  border-radius: 999px;
-  background: var(--pastilla);
-  transition:
-    transform var(--duracion) var(--resorte),
-    width var(--duracion) var(--resorte);
-}
-
-.categoria {
-  position: relative; /* por encima de la pastilla */
-  flex: none;
-  min-height: var(--tactil);
-  min-width: var(--tactil);
-  padding: 0 14px;
-  border-radius: 999px;
-  font: var(--t-boton);
+.reel-descripcion {
+  font: var(--t-subtitulo);
   color: var(--video-secundario);
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
-.categoria[aria-current="true"] {
-  color: var(--video-texto);
-}
-
-/* Versión compacta: solo la categoría activa. */
-.capsula-compacta {
-  position: absolute;
-  top: 0;
-  padding: 4px;
-  font: var(--t-boton);
-}
-
-.pastilla-compacta {
-  display: flex;
-  align-items: center;
-  min-height: calc(var(--tactil) - 8px);
-  min-width: var(--tactil);
-  padding: 0 14px;
-  border-radius: 999px;
-  background: var(--pastilla);
-}
-
-.capsula.oculta,
-.capsula-compacta.oculta {
-  opacity: 0;
-  transform: scale(0.6);
-  pointer-events: none;
-}
-
-/* ---------- Cápsulas de acciones (abajo) ---------- */
-.capsulas-abajo {
-  position: absolute;
-  z-index: 2;
-  left: max(var(--separacion), env(safe-area-inset-left));
-  right: max(var(--separacion), env(safe-area-inset-right));
-  bottom: calc(env(safe-area-inset-bottom) + var(--separacion));
-  display: flex;
-  gap: 8px;
-}
-
-.capsula-boton {
-  flex: 1 1 auto;
+/* Se ve de 22px pero toca en 44px: los márgenes negativos devuelven el relleno. */
+.reel-info {
   min-height: var(--tactil);
-  padding: 6px 14px;
-  border-radius: 22px;
-  font: var(--t-boton);
-  color: var(--video-texto);
-  text-align: center;
+  margin: -9px 0 -11px;
+  padding: 11px 0;
+  border-radius: 8px;
+  font: var(--t-cuerpo);
+  color: var(--tint-oscuro);
 }
 
 /* ---------- Placeholder sin media: silueta de un plato que gira lento ---------- */
 .giro {
   display: grid;
   place-items: center;
-  padding-bottom: 30%;
   background: var(--video-fondo);
   perspective: 800px;
 }
 
 .giro-plato {
   position: relative;
-  width: min(64vw, 280px);
+  width: min(64%, 280px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: #161618;
@@ -804,9 +802,12 @@ button {
 
   .hoja,
   .hoja-fondo,
-  .pastilla,
-  .capsula,
-  .capsula-compacta {
+  .pestana,
+  .indicador {
     transition: none;
+  }
+
+  .pestanas-pista {
+    scroll-behavior: auto;
   }
 }

@@ -7,7 +7,8 @@
     "dev": "vite --host",
     "build": "vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy": "vite build && wrangler deploy"
   },
   "dependencies": {
     "@menu3d/shared": "workspace:*",
@@ -20,6 +21,7 @@
     "@types/react-dom": "^19.3.0",
     "typescript": "~6.0.3",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.166.0"
   }
 }
