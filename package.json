@@ -8,19 +8,23 @@
   },
   "scripts": {
     "prepare": "git config core.hooksPath .githooks",
-    "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test && vitest run scripts",
+    "typecheck": "pnpm -r typecheck && tsc --noEmit -p scripts/tsconfig.json",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "validar:demo": "tsx packages/shared/scripts/validar-demo.ts demo/carta.json"
+    "validar:demo": "tsx packages/shared/scripts/validar-demo.ts demo/carta.json",
+    "preparar:videos": "tsx scripts/preparar-videos.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
     "eslint": "^10.13.0",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.72.1"
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.1.0",
+    "zod": "^4.6.7"
   }
 }

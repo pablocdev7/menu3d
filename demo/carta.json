@@ -1,12 +1,11 @@
 {
   "version": 1,
   "local": {
-    "slug": "bodegon-demo",
-    "nombre": "Bodegón Demo",
+    "slug": "brasa-y-copa",
+    "nombre": "Brasa & Copa",
     "marca": {
-      "colorPrincipal": "#B5462F"
-    },
-    "linkResenasGoogle": "https://g.page/r/bodegon-demo/review"
+      "colorPrincipal": "#7A1E2C"
+    }
   },
   "categorias": [
     {
@@ -15,13 +14,13 @@
       "orden": 0
     },
     {
-      "id": "principales",
-      "nombre": "Principales",
+      "id": "para-compartir",
+      "nombre": "Para compartir",
       "orden": 1
     },
     {
-      "id": "postres",
-      "nombre": "Postres",
+      "id": "principales",
+      "nombre": "Principales",
       "orden": 2
     },
     {
@@ -33,192 +32,157 @@
   "platos": [
     {
       "id": "empanadas-de-carne",
-      "nombre": "Empanadas de carne",
-      "descripcion": "Empanadas al horno de carne cortada a cuchillo, con cebolla, huevo y aceituna.",
+      "nombre": "Empanadas de carne cortada a cuchillo",
+      "descripcion": "Masa dorada y crocante, relleno jugoso de carne, cebolla y huevo. Al horno de barro.",
       "categoriaId": "entradas",
       "tipo": "plato",
       "formatos": [
         {
           "nombre": "Unidad",
           "precio": {
-            "centavos": 180000,
+            "centavos": 220000,
             "moneda": "ARS"
           }
         },
         {
           "nombre": "Media docena",
           "precio": {
-            "centavos": 990000,
+            "centavos": 1200000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": [
-        "carne vacuna",
-        "cebolla",
-        "huevo",
-        "aceituna",
-        "masa"
-      ],
+      "ingredientesVisibles": ["carne vacuna", "cebolla", "huevo", "masa"],
       "alergenos": ["gluten", "huevo"],
-      "alergenosValidadosPorDueno": false,
+      "alergenosValidadosPorDueno": true,
       "disponible": true,
       "destacado": false,
-      "etiquetas": []
+      "etiquetas": [],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/empanadas.mp4",
+        "poster": "/videos/empanadas.jpg"
+      }
     },
     {
-      "id": "ensalada-completa",
-      "nombre": "Ensalada completa",
-      "descripcion": "Lechuga, tomate, zanahoria, huevo duro, choclo y queso en cubos, con vinagreta de mostaza.",
+      "id": "ensalada-de-la-huerta",
+      "nombre": "Ensalada de la huerta",
+      "descripcion": "Hojas verdes, tomates y vegetales frescos de estación con oliva y limón.",
       "categoriaId": "entradas",
       "tipo": "plato",
       "formatos": [
         {
           "nombre": "Individual",
           "precio": {
-            "centavos": 850050,
+            "centavos": 950000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": [
-        "lechuga",
-        "tomate",
-        "zanahoria",
-        "huevo",
-        "choclo",
-        "queso"
-      ],
-      "alergenos": ["huevo", "lacteos", "mostaza"],
-      "alergenosValidadosPorDueno": false,
+      "ingredientesVisibles": ["hojas verdes", "tomate", "pepino", "zanahoria"],
+      "alergenos": [],
+      "alergenosValidadosPorDueno": true,
       "disponible": true,
       "destacado": false,
-      "etiquetas": ["vegetariano", "sin_tacc"]
+      "etiquetas": ["vegano", "sin_tacc"],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/ensalada.mp4",
+        "poster": "/videos/ensalada.jpg"
+      }
     },
     {
-      "id": "milanesa-con-papas",
-      "nombre": "Milanesa con papas fritas",
-      "descripcion": "Milanesa de ternera bien crocante con papas fritas caseras y limón.",
+      "id": "papas-fritas-con-alioli",
+      "nombre": "Papas fritas con alioli",
+      "descripcion": "Papas cortadas a mano, doradas y crujientes, con alioli casero para mojar.",
+      "categoriaId": "para-compartir",
+      "tipo": "plato",
+      "formatos": [
+        {
+          "nombre": "Porción",
+          "precio": {
+            "centavos": 850000,
+            "moneda": "ARS"
+          }
+        }
+      ],
+      "ingredientesVisibles": ["papas", "ajo", "aceite de oliva"],
+      "alergenos": ["huevo"],
+      "alergenosValidadosPorDueno": true,
+      "disponible": true,
+      "destacado": false,
+      "etiquetas": ["vegetariano"],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/papasfritas.mp4",
+        "poster": "/videos/papasfritas.jpg"
+      }
+    },
+    {
+      "id": "pinchos-de-cerdo",
+      "nombre": "Pinchos de cerdo y morrón",
+      "descripcion": "Bondiola y morrón a las brasas, con un adobo picante y ahumado.",
+      "categoriaId": "para-compartir",
+      "tipo": "plato",
+      "formatos": [
+        {
+          "nombre": "Porción",
+          "precio": {
+            "centavos": 1350000,
+            "moneda": "ARS"
+          }
+        }
+      ],
+      "ingredientesVisibles": ["bondiola de cerdo", "morrón", "cebolla", "ají"],
+      "alergenos": [],
+      "alergenosValidadosPorDueno": false,
+      "disponible": false,
+      "destacado": false,
+      "etiquetas": ["picante"],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/pinchos.mp4",
+        "poster": "/videos/pinchos.jpg"
+      }
+    },
+    {
+      "id": "bife-de-chorizo",
+      "nombre": "Bife de chorizo a la brasa",
+      "descripcion": "400 g de bife grueso sellado a las brasas, jugoso por dentro y con sal parrillera.",
       "categoriaId": "principales",
       "tipo": "plato",
       "formatos": [
         {
           "nombre": "Individual",
-          "precio": {
-            "centavos": 1450000,
-            "moneda": "ARS"
-          }
-        },
-        {
-          "nombre": "Para compartir",
           "precio": {
             "centavos": 2600000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": ["ternera", "pan rallado", "papas", "limón"],
-      "alergenos": ["gluten", "huevo"],
-      "alergenosValidadosPorDueno": false,
+      "ingredientesVisibles": ["bife de chorizo", "sal parrillera"],
+      "alergenos": [],
+      "alergenosValidadosPorDueno": true,
       "disponible": true,
       "destacado": true,
-      "etiquetas": []
+      "etiquetas": ["sin_tacc"],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/bifes.mp4",
+        "poster": "/videos/bifes.jpg"
+      }
     },
     {
-      "id": "tallarines-con-tuco",
-      "nombre": "Tallarines con tuco",
-      "descripcion": "Pasta casera al huevo con salsa de tomate de cocción lenta y queso rallado.",
+      "id": "hamburguesa-doble",
+      "nombre": "Hamburguesa doble con cheddar",
+      "descripcion": "Dos medallones a la plancha, cheddar fundido y pan de papa con sésamo.",
       "categoriaId": "principales",
       "tipo": "plato",
       "formatos": [
         {
-          "nombre": "Individual",
+          "nombre": "Con papas",
           "precio": {
-            "centavos": 1180000,
-            "moneda": "ARS"
-          }
-        }
-      ],
-      "ingredientesVisibles": [
-        "tallarines",
-        "salsa de tomate",
-        "albahaca",
-        "queso rallado"
-      ],
-      "alergenos": ["gluten", "huevo", "lacteos"],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": []
-    },
-    {
-      "id": "bife-de-chorizo",
-      "nombre": "Bife de chorizo a la parrilla",
-      "descripcion": "Bife de 400 g a la parrilla con guarnición de papas rústicas o ensalada mixta.",
-      "categoriaId": "principales",
-      "tipo": "plato",
-      "formatos": [
-        {
-          "nombre": "400 g",
-          "precio": {
-            "centavos": 2290000,
-            "moneda": "ARS"
-          }
-        }
-      ],
-      "ingredientesVisibles": ["bife de chorizo", "papas", "chimichurri"],
-      "alergenos": [],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": ["sin_tacc"]
-    },
-    {
-      "id": "guiso-de-lentejas",
-      "nombre": "Guiso de lentejas",
-      "descripcion": "Guiso espeso de lentejas con chorizo colorado, panceta, zapallo y pimentón.",
-      "categoriaId": "principales",
-      "tipo": "plato",
-      "formatos": [
-        {
-          "nombre": "Cazuela",
-          "precio": {
-            "centavos": 1090000,
-            "moneda": "ARS"
-          }
-        }
-      ],
-      "ingredientesVisibles": [
-        "lentejas",
-        "chorizo colorado",
-        "panceta",
-        "zapallo",
-        "apio"
-      ],
-      "alergenos": ["apio"],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": ["picante"]
-    },
-    {
-      "id": "hamburguesa-completa",
-      "nombre": "Hamburguesa completa",
-      "descripcion": "Medallón de 180 g, cheddar, lechuga, tomate y huevo a la plancha en pan de papa con sésamo.",
-      "categoriaId": "principales",
-      "tipo": "plato",
-      "formatos": [
-        {
-          "nombre": "Simple",
-          "precio": {
-            "centavos": 1290000,
-            "moneda": "ARS"
-          }
-        },
-        {
-          "nombre": "Doble",
-          "precio": {
-            "centavos": 1590000,
+            "centavos": 1750000,
             "moneda": "ARS"
           }
         }
@@ -226,174 +190,121 @@
       "ingredientesVisibles": [
         "carne vacuna",
         "cheddar",
-        "lechuga",
-        "tomate",
-        "huevo",
-        "pan"
+        "pan de papa",
+        "pepinos"
       ],
-      "alergenos": ["gluten", "huevo", "lacteos", "sesamo"],
+      "alergenos": ["gluten", "lacteos", "sesamo"],
       "alergenosValidadosPorDueno": false,
       "disponible": true,
       "destacado": false,
-      "etiquetas": []
+      "etiquetas": [],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/hamburguesa.mp4",
+        "poster": "/videos/hamburguesa.jpg"
+      }
     },
     {
-      "id": "cazuela-rustica",
-      "nombre": "Cazuela rústica de campo",
-      "descripcion": "Bondiola braseada con verduras asadas y polenta cremosa, servida en cazuela de barro.",
-      "categoriaId": "principales",
-      "tipo": "plato",
+      "id": "limonada-menta-jengibre",
+      "nombre": "Limonada de menta y jengibre",
+      "descripcion": "Limón exprimido en el momento, menta fresca y un toque de jengibre. Bien fría.",
+      "categoriaId": "bebidas",
+      "tipo": "bebida",
       "formatos": [
         {
-          "nombre": "Individual",
+          "nombre": "Vaso",
           "precio": {
-            "centavos": 1690000,
+            "centavos": 480000,
+            "moneda": "ARS"
+          }
+        },
+        {
+          "nombre": "Jarra",
+          "precio": {
+            "centavos": 1200000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": [
-        "bondiola",
-        "polenta",
-        "morrón",
-        "cebolla",
-        "zanahoria"
-      ],
-      "alergenos": ["lacteos"],
+      "ingredientesVisibles": ["limón", "menta", "jengibre"],
+      "alergenos": [],
       "alergenosValidadosPorDueno": false,
-      "disponible": false,
+      "disponible": true,
       "destacado": false,
-      "etiquetas": []
+      "etiquetas": [],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/limonada.mp4",
+        "poster": "/videos/limonada.jpg"
+      }
     },
     {
-      "id": "flan-con-crema",
-      "nombre": "Flan casero con crema",
-      "descripcion": "Flan de huevo con caramelo, crema batida y dulce de leche.",
-      "categoriaId": "postres",
-      "tipo": "plato",
+      "id": "rosado-de-la-casa",
+      "nombre": "Rosado de la casa",
+      "descripcion": "Rosado mendocino fresco y frutado, ideal para acompañar carnes y entradas.",
+      "categoriaId": "bebidas",
+      "tipo": "bebida",
       "formatos": [
         {
-          "nombre": "Porción",
+          "nombre": "Copa",
           "precio": {
             "centavos": 650000,
             "moneda": "ARS"
           }
-        }
-      ],
-      "ingredientesVisibles": ["flan", "crema", "dulce de leche"],
-      "alergenos": ["huevo", "lacteos"],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": ["vegetariano"]
-    },
-    {
-      "id": "limonada-menta-jengibre",
-      "nombre": "Limonada con menta y jengibre",
-      "descripcion": "Limonada exprimida en el momento, con menta fresca, jengibre y mucho hielo.",
-      "categoriaId": "bebidas",
-      "tipo": "bebida",
-      "formatos": [
-        {
-          "nombre": "Vaso",
-          "precio": {
-            "centavos": 450050,
-            "moneda": "ARS"
-          }
         },
         {
-          "nombre": "Jarra 1 L",
+          "nombre": "Botella",
           "precio": {
-            "centavos": 1100000,
+            "centavos": 2400000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": ["limón", "menta", "jengibre", "hielo"],
-      "alergenos": [],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": ["vegano", "sin_tacc"]
-    },
-    {
-      "id": "vermu-del-patio",
-      "nombre": "Vermú del Patio",
-      "descripcion": "Trago de autor: vermú rojo, soda, piel de naranja y aceitunas.",
-      "categoriaId": "bebidas",
-      "tipo": "bebida",
-      "formatos": [
-        {
-          "nombre": "Vaso",
-          "precio": {
-            "centavos": 700000,
-            "moneda": "ARS"
-          }
-        },
-        {
-          "nombre": "Jarra 1 L",
-          "precio": {
-            "centavos": 1900000,
-            "moneda": "ARS"
-          }
-        }
-      ],
-      "ingredientesVisibles": [
-        "vermú rojo",
-        "soda",
-        "naranja",
-        "aceitunas",
-        "hielo"
-      ],
+      "ingredientesVisibles": [],
       "alergenos": ["sulfitos"],
-      "alergenosValidadosPorDueno": false,
+      "alergenosValidadosPorDueno": true,
       "disponible": true,
       "destacado": true,
-      "etiquetas": []
+      "etiquetas": [],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/vino-rosa.mp4",
+        "poster": "/videos/vino-rosa.jpg"
+      }
     },
     {
-      "id": "gin-de-la-huerta",
-      "nombre": "Gin de la Huerta",
-      "descripcion": "Trago de autor: gin, tónica, pepino, romero y pimienta rosa.",
+      "id": "whisky-on-the-rocks",
+      "nombre": "Whisky on the rocks",
+      "descripcion": "Whisky escocés servido sobre hielo en vaso bajo, para cerrar sin apuro.",
       "categoriaId": "bebidas",
       "tipo": "bebida",
       "formatos": [
         {
-          "nombre": "Copa",
+          "nombre": "Simple",
           "precio": {
-            "centavos": 950000,
+            "centavos": 900000,
+            "moneda": "ARS"
+          }
+        },
+        {
+          "nombre": "Doble",
+          "precio": {
+            "centavos": 1550000,
             "moneda": "ARS"
           }
         }
       ],
-      "ingredientesVisibles": ["gin", "tónica", "pepino", "romero", "hielo"],
+      "ingredientesVisibles": [],
       "alergenos": [],
       "alergenosValidadosPorDueno": false,
       "disponible": true,
       "destacado": false,
-      "etiquetas": []
-    },
-    {
-      "id": "negroni-de-maracuya",
-      "nombre": "Negroni de maracuyá",
-      "descripcion": "Trago de autor: nuestra versión del negroni con pulpa de maracuyá y bitter.",
-      "categoriaId": "bebidas",
-      "tipo": "bebida",
-      "formatos": [
-        {
-          "nombre": "Copa",
-          "precio": {
-            "centavos": 1050000,
-            "moneda": "ARS"
-          }
-        }
-      ],
-      "ingredientesVisibles": ["gin", "bitter", "vermú", "maracuyá", "hielo"],
-      "alergenos": ["sulfitos"],
-      "alergenosValidadosPorDueno": false,
-      "disponible": true,
-      "destacado": false,
-      "etiquetas": []
+      "etiquetas": [],
+      "media": {
+        "tipo": "video",
+        "url": "/videos/vaso-wishky.mp4",
+        "poster": "/videos/vaso-wishky.jpg"
+      }
     }
   ]
 }
